@@ -15,6 +15,17 @@ function GameListPage() {
   const [loading, setLoading] = useState(true)
   const [expandedGames, setExpandedGames] = useState(new Set())
 
+  // Define a color palette for categories
+  const categoryColors = [
+    'success',    // green
+    'primary',    // blue
+    'warning',    // yellow
+    'danger',     // red
+    'info',       // cyan
+    'secondary',  // gray
+    'dark',       // dark gray
+  ]
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,11 +33,8 @@ function GameListPage() {
           getGames(),
           getCategories()
         ])
-        console.log('Games data:', gamesData.map(game => ({
-          name: game.name,
-          icon: game.icon,
-          fullPath: `/${game.icon}`
-        })))
+        console.log('Fetched games:', gamesData)
+        console.log('Fetched categories:', categoriesData)
         setGames(gamesData)
         setCategories(categoriesData)
       } catch (error) {
@@ -38,6 +46,15 @@ function GameListPage() {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    console.log('Selected category:', selectedCategory)
+  }, [selectedCategory])
+
+  useEffect(() => {
+    console.log('Search value:', search)
+  }, [search])
+
+  //game description
   const toggleDescription = (gameCode) => {
     setExpandedGames(prev => {
       const newSet = new Set(prev)
@@ -68,6 +85,7 @@ function GameListPage() {
       )
     }
 
+    console.log('Filtered games:', filtered)
     return filtered
   }, [games, categories, selectedCategory, search])
 
@@ -132,9 +150,11 @@ function GameListPage() {
                   />
                   <div className="game-overlay">
                     <Button 
-                      color="success" 
                       className="play-button"
-                      onClick={() => navigate(`/game/${game.code}`)}
+                      onClick={() => { 
+                        console.log('Play Now clicked for game:', game.code, game.name)
+                        navigate(`/game/${game.code}`)
+                      }}
                     >
                       Play Now
                     </Button>
@@ -144,10 +164,12 @@ function GameListPage() {
                   <div className="mb-3">
                     <h5 className="mb-2">{game.name}</h5>
                     <div className="category-badges">
-                      {game.categoryIds && game.categoryIds.map(catId => {
+                      {game.categoryIds && game.categoryIds.map((catId, idx) => {
                         const cat = categories.find(c => c.id === catId);
+                        // Assign a color based on category index or id
+                        const color = categoryColors[catId % categoryColors.length];
                         return cat ? (
-                          <Badge color="secondary" className="me-1" key={catId}>
+                          <Badge color={color} className="me-1" key={catId}>
                             {cat.name}
                           </Badge>
                         ) : null;
@@ -161,7 +183,10 @@ function GameListPage() {
                     <Button 
                       color="link" 
                       className="p-0 mt-2 text-decoration-none"
-                      onClick={() => toggleDescription(game.code)}
+                      onClick={() => {
+                        console.log('Toggle Read More for game:', game.code, game.name)
+                        toggleDescription(game.code)
+                      }}
                     >
                       {expandedGames.has(game.code) ? 'Show Less ↑' : 'Read More ↓'}
                     </Button>

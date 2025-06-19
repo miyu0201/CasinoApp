@@ -13,13 +13,24 @@ function LoginPage({ onLogin }) {
     e.preventDefault()
     setError('')
     setLoading(true)
-
+    console.log('Login form submitted. Username:', username)
     try {
       const response = await login(username, password)
       if (response.status === 'success') {
+        console.log('Login successful for user:', username)
         onLogin(response.player)
       } else {
-        setError(response.message || 'Login failed')
+        console.log('Login failed for user:', username, 'Error:', response.error)
+        const errMsg = (response.error || '').toLowerCase();
+        if (errMsg.includes('player does not exist') && !errMsg.includes('wrong password')) {
+          setError('Incorrect username. Please try again.')
+        } else if (errMsg.includes('wrong password') && !errMsg.includes('player does not exist')) {
+          setError('Incorrect password. Please try again.')
+        } else if (errMsg.includes('player does not exist') && errMsg.includes('wrong password')) {
+          setError('Incorrect username or password. Please try again.')
+        } else {
+          setError(response.error || 'Login failed')
+        }
       }
     } catch (err) {
       setError('An error occurred. Please try again.')

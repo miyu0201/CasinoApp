@@ -1,56 +1,77 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { Card, CardBody, CardTitle, Button } from 'reactstrap'
+import './GamePage.css'
 
 function GamePage() {
   const { id } = useParams()
   const gameContainerRef = useRef(null)
+  const [gameName, setGameName] = useState('')
 
   useEffect(() => {
-    console.log("useEffect in GamePage for ID:", id);
-    console.log("window.comeon:", window.comeon);
-    console.log("window.comeon.game:", window.comeon ? window.comeon.game : 'not exist');
+    console.log('GamePage loaded for id:', id)
+    //get game name
+    fetch('http://localhost:3001/games')
+      .then(res => res.json())
+      .then(data => {
+        const game = data.find(game => game.code === id)
+        setGameName(game ? game.name : id)
+        console.log('Loaded game data:', game)
+      })
+  }, [id])
 
+  useEffect(() => {
     if (window.comeon && window.comeon.game && window.comeon.game.launch) {
-      console.log("Game launcher is available. Launching game:", id);
-      window.comeon.game.launch(id);
-    } else {
-      console.error('Game launcher not available after useEffect mount. Retrying...');
-
-      const retryTimeout = setTimeout(() => {
-        if (window.comeon && window.comeon.game && window.comeon.game.launch) {
-          console.log("Game launcher available on retry. Launching game:", id);
-          window.comeon.game.launch(id);
-        } else {
-          console.error('Game launcher still not available after retry.');
-        }
-      }, 500); // Retry after 500ms
-
-      return () => clearTimeout(retryTimeout); // Cleanup retry timeout
+      //call api, takes game code and launch the game
+      window.comeon.game.launch(id) 
+      console.log('Launched game with id:', id)
     }
-
+    //Cleanup when game change
     return () => {
-      // Cleanup if needed
       if (gameContainerRef.current) {
-        gameContainerRef.current.innerHTML = '';
+        gameContainerRef.current.innerHTML = ''
       }
-    };
-  }, [id]);
+    }
+  }, [id])
+
+  // Fullscreen mode handler
+  const handleFullScreen = () => {
+    console.log('Fullscreen button clicked for game:', id, gameName)
+    const elem = gameContainerRef.current
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen()
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen()
+    } else if (elem.webkitRequestFullscreen) {
+      elem.webkitRequestFullscreen()
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen()
+    }
+  }
 
   return (
-    <Card className="mx-auto" style={{ width: '100%' }}>
-      <CardBody>
-        <CardTitle tag="h3" className="mb-4 text-center">Game: {id}</CardTitle>
+    <div className="game-page-container">
+      <div className="game-container">
+        <h3 className="game-title">{gameName}</h3>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
+          <button
+            className="fullscreen-btn-overlay"
+            onClick={handleFullScreen}
+            title="Full Screen"
+          >
+            ⛶
+          </button>
+        </div>
+        {/* game launch div */}
         <div
           ref={gameContainerRef}
-          id="game-launch"
-          className="mb-4"
-          style={{ minHeight: 500 }}
-        />
-        <Button color="secondary" tag={Link} to="/games">Back to Game List</Button>
-      </CardBody>
-    </Card>
-  );
+          id="game-launch"   //api use  document.getElementById('game-launch')
+          style={{ position: 'relative' }}
+        >
+        </div>
+        <Link to="/games" className="back-btn">Back to Game List</Link>
+      </div>
+    </div>
+  )
 }
 
-export default GamePage 
+export default GamePage

@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap');
+
+.game-page-container {
+    /* background: #181a20; */
+    min-height: 100vh;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    background: linear-gradient(120deg, #222831 60%, #3a1c71 100%);
+    border-radius: 18px;
+    box-shadow: 0 0 40px #00ff0033,
+     0 0 20px #22283122;
+    padding: 2.5rem 2.5rem 2rem 2.5rem;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 10;
+    border: 2px solid #00ff00;
+    position: relative;
+    backdrop-filter: blur(2px);
+}
+
+.game-title {
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.2rem;
+    text-shadow: 0 0 12px #00ff00, 0 0 24px #00ff00, 0 0 48px #00ff00;
+    letter-spacing: 6px;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+#game-launch {
+   background-color: white;
+    border-radius: 16px;
+    min-height: 520px;
+    box-shadow: 0 0 24px #ffd70033, 0 0 8px #00ffcc33;
+    margin-bottom: 2.2rem;
+    padding: 1.2rem;
+    position: relative;
+    overflow: visible;
+}
+
+.back-btn {
+    display: block;
+    margin: 0 auto;
+    background-color: #00cc00; 
+    border-color: #00cc00;
+    text-decoration: none;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    border: none;
+    border-radius: 10px;
+    padding: 0.85rem 2.2rem;
+    font-size: 1.1rem;
+    text-shadow: 0 0 6px #00ff00, 0 0 12px #00ff00;
+    box-shadow: 0 0 12px #00ff0055;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.back-btn:hover {
+    background: linear-gradient(90deg, #00ff00 0%, #00ff00 100%);
+    color: #fff;
+    box-shadow: 0 0 24px #00ff00aa, 0 0 40px #00ff00cc;
+}
+
+.game-flex-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.fullscreen-btn-overlay {
+    position: static;
+    margin-top: -1rem;
+    margin-bottom: -1rem;
+    margin-left: auto;
+    margin-right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: none;
+    color: #00ff00;
+    border: none;
+    border-radius: 0;
+    width: auto;
+    height: auto;
+    font-size: 1.5rem;
+    font-family: 'Press Start 2P', cursive;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.1s;
+    outline: none;
+    box-shadow: none;
+}
+
+.fullscreen-btn-overlay:hover {
+    color: #00cc00;
+    transform: scale(1.1);
+}

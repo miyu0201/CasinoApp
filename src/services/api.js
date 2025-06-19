@@ -1,3 +1,4 @@
+//sets base URL for all API request
 const API_URL = 'http://localhost:3001';
 
 export const login = async (username, password) => {
